@@ -1,0 +1,4 @@
+rendered/
+__pycache__/
+.mypy_cache/
+output.txt
