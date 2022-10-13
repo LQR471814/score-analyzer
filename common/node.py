@@ -1,26 +1,28 @@
 from __future__ import annotations
 
-from typing import Type, TypeVar
-from ly.node import Node
+from typing import Iterable, Type, TypeVar
+from ly.music.items import Item
 
-N = TypeVar("N", bound=Node)
+N = TypeVar("N", bound=Item)
 
 
-def get_descendants(roots: list[Node], targets: list[Type[N]]) -> list[Type[N]]:
+def get_descendants(roots: list[Item], targets: list[Type[N]]) -> list[Item]:
     pool = roots
     for t in targets:
-        current = []
+        current: list[Item] = []
         for element in pool:
+            n: Item
             for n in element.find(t):
                 current.append(n)
         pool = current
     return pool
 
 
-def get_children(roots: list[Node], targets: list[Type[N]]) -> list[Type[N]]:
+def get_children(roots: list[Item], targets: list[Type[N]]) -> list[Item]:
     pool = roots
     for t in targets:
-        current = []
+        current: list[Item] = []
+        n: Item
         for n in pool:
             for child in n:
                 if type(child) == t:
@@ -29,7 +31,7 @@ def get_children(roots: list[Node], targets: list[Type[N]]) -> list[Type[N]]:
     return pool
 
 
-def filter_ancestors(roots: list[Node], targets: list[Type[N]]) -> list[Node]:
+def filter_ancestors(roots: Iterable[Item], targets: list[Type[N]]) -> list[Item]:
     ok_nodes = []
     for r in roots:
         bad = False
@@ -45,4 +47,12 @@ def filter_ancestors(roots: list[Node], targets: list[Type[N]]) -> list[Node]:
     return ok_nodes
 
 
-roman_numerals = ["I", "II", "III", "IV", "V", "VI", "VII"]
+class BadScore(Exception):
+    message: str
+
+    def __init__(self, message: str) -> None:
+        self.message = message
+        super().__init__()
+
+    def __str__(self) -> str:
+        return f"bad score: {self.message}"

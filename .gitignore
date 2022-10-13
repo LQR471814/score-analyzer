@@ -1,4 +1,8 @@
-rendered/
+# cache
 __pycache__/
 .mypy_cache/
+
+rendered/
 output.txt
+
+.vscode/*.code-workspace
